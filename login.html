@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keuangan Login & Signup Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 900px;
+            width: 100%;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .welcome-section {
+            flex: 1;
+            background: linear-gradient(135deg, #0a3c64 0%, #0d6e9bcb 100%);
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .welcome-section h1 {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+
+        .welcome-section p {
+            font-size: 16px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .form-section {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .form-container {
+            max-width: 350px;
+            margin: 0 auto;
+        }
+
+        .form-title {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #f59619;
+            outline: none;
+        }
+
+        .password-input {
+            position: relative;
+        }
+
+        .password-input input {
+            padding-right: 40px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #f7a815 0%, #df7512ef 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        .link-text {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        .link-text a {
+            color: #6a11cb;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .link-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsif */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .welcome-section {
+                padding: 30px;
+                text-align: center;
+            }
+            
+            .form-section {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Bagian Welcome -->
+        <div class="welcome-section">
+            <h1>WELCOME BACK!</h1>
+            <p>Spirit at work</p>
+        </div>
+        
+        <!-- Bagian Form -->
+        <div class="form-section">
+            <div class="form-container">
+                <!-- Form Login -->
+                <form id="login-form" class="form">
+                    <h2 class="form-title">Login</h2>
+                    
+                    <div class="form-group">
+                        <label for="login-username">Username</label>
+                        <input type="text" id="login-username" placeholder="Masukkan username">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="login-password">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="login-password" placeholder="Masukkan password">
+                            <button type="button" class="password-toggle">👁️</button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn">Login</button>
+                    
+                    <p class="link-text">Don't have an account? <a href="#" id="go-to-signup">Sign Up</a></p>
+                </form>
+                
+                <!-- Form Sign Up -->
+                <form id="signup-form" class="form" style="display: none;">
+                    <h2 class="form-title">Sign Up</h2>
+                    
+                    <div class="form-group">
+                        <label for="signup-username">Username</label>
+                        <input type="text" id="signup-username" placeholder="Masukkan username" value="">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" placeholder="@gmail.com" value="">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <div class="password-input">
+                            <input type="password" id="signup-password" placeholder="Masukkan password">
+                            <button type="button" class="password-toggle">👁️</button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn">Sign Up</button>
+                    
+                    <p class="link-text">Already have an account? <a href="#" id="go-to-login">Login</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+<script>
+    // Fungsi untuk beralih antara form login dan signup
+    document.getElementById('go-to-signup').addEventListener('click', function(e) {
+        e.preventDefault();
+        showSignupForm();
+    });
+
+    document.getElementById('go-to-login').addEventListener('click', function(e) {
+        e.preventDefault();
+        showLoginForm();
+    });
+
+    function showLoginForm() {
+        document.getElementById('login-form').style.display = 'block';
+        document.getElementById('signup-form').style.display = 'none';
+    }
+
+    function showSignupForm() {
+        document.getElementById('login-form').style.display = 'none';
+        document.getElementById('signup-form').style.display = 'block';
+    }
+
+    // Fungsi untuk toggle password visibility
+    document.querySelectorAll('.password-toggle').forEach(function(toggle) {
+        toggle.addEventListener('click', function() {
+            const passwordInput = this.parentElement.querySelector('input');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                this.textContent = '🙈';
+            } else {
+                passwordInput.type = 'password';
+                this.textContent = '👁️';
+            }
+        });
+    });
+
+    // Fungsi untuk form submission
+    document.getElementById('login-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Contoh validasi sederhana
+        const username = document.getElementById('login-username').value.trim();
+        const password = document.getElementById('login-password').value.trim();
+
+        if (username === '' || password === '') {
+            alert('Harap isi semua data!');
+        } else {
+            alert('Login berhasil!');
+            // Redirect ke halaman lain
+            window.location.href = 'user.htlml'; // Ganti sesuai nama file tujuanmu
+        }
+    });
+
+    document.getElementById('signup-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const username = document.getElementById('signup-username').value.trim();
+        const email = document.getElementById('signup-email').value.trim();
+        const password = document.getElementById('signup-password').value.trim();
+
+        if (username === '' || email === '' || password === '') {
+            alert('Harap isi semua data!');
+        } else {
+            alert('Pendaftaran berhasil!');
+            // Redirect ke halaman lain
+            window.location.href = 'welcome.html'; // Ganti sesuai halaman setelah signup
+        }
+    });
+</script>
