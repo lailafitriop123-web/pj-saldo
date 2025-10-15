@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan - Admin Panel</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .logo h2 {
+            font-size: 24px;
+        }
+        
+        .nav-links {
+            list-style: none;
+            padding: 0 15px;
+        }
+        
+        .nav-links li {
+            margin-bottom: 10px;
+        }
+        
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .nav-links i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .top-header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Content Area */
+        .content {
+            padding: 30px;
+            flex: 1;
+        }
+        
+        .page-title {
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        th, td {
+            padding: 18px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--light);
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .report-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .report-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s;
+        }
+        
+        .report-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .report-card .icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        
+        .report-card .amount {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .income-report .amount {
+            color: var(--success);
+        }
+        
+        .expense-report .amount {
+            color: var(--danger);
+        }
+        
+        .balance-report .amount {
+            color: var(--primary);
+        }
+        
+        .report-actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            min-width: 150px;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .chart-placeholder {
+            height: 300px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            color: #6c757d;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 10px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+        }
+        
+        .progress-income {
+            background: var(--success);
+        }
+        
+        .progress-expense {
+            background: var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="admin-dashboard.html"><i>📊</i> Dashboard</a></li>
+                <li><a href="admin-users.html"><i>👥</i> Manajemen User</a></li>
+                <li><a href="admin-transactions.html"><i>💰</i> Transaksi</a></li>
+                <li><a href="admin-categories.html"><i>📂</i> Kategori</a></li>
+                <li><a href="admin-reports.html" class="active"><i>📈</i> Laporan</a></li>
+                <li><a href="admin-settings.html"><i>⚙️</i> Pengaturan</a></li>
+                <li><a href="login.html" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;"><i>🚪</i> Logout</a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="top-header">
+                <h1>Laporan Keuangan</h1>
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <div>
+                        <div>Administrator</div>
+                        <div style="font-size: 12px; opacity: 0.8;">Super Admin</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content Area -->
+            <div class="content">
+                <div class="page-title">
+                    <h1>Analisis & Laporan</h1>
+                    <p style="color: #6c757d; margin-top: 5px;">Laporan keuangan dan analisis sistem</p>
+                </div>
+                
+                <!-- Report Actions -->
+                <div class="report-actions">
+                    <button class="btn btn-primary">📊 Generate Laporan</button>
+                    <button class="btn btn-success">📥 Export PDF</button>
+                    <button class="btn btn-danger">📤 Export Excel</button>
+                    <button class="btn" style="background: #6c757d; color: white;">🔄 Refresh Data</button>
+                </div>
+                
+                <!-- Filter Controls -->
+                <div class="filter-controls">
+                    <select class="filter-select">
+                        <option>Bulan Ini</option>
+                        <option>Bulan Lalu</option>
+                        <option>3 Bulan Terakhir</option>
+                        <option>Tahun Ini</option>
+                    </select>
+                    <input type="date" class="filter-select" value="2024-10-01">
+                    <input type="date" class="filter-select" value="2024-10-31">
+                    <select class="filter-select">
+                        <option>Semua User</option>
+                        <option>codehd!</option>
+                        <option>johndoe</option>
+                        <option>sarah_connor</option>
+                    </select>
+                    <button class="btn btn-primary">Terapkan Filter</button>
+                </div>
+                
+                <!-- Report Cards -->
+                <div class="report-cards">
+                    <div class="report-card income-report">
+                        <div class="icon">💰</div>
+                        <h3>Total Pemasukan</h3>
+                        <div class="amount">Rp 245 JT</div>
+                        <div style="color: #28a745; font-size: 14px;">↑ 8% dari bulan lalu</div>
+                    </div>
+                    <div class="report-card expense-report">
+                        <div class="icon">💸</div>
+                        <h3>Total Pengeluaran</h3>
+                        <div class="amount">Rp 189 JT</div>
+                        <div style="color: #dc3545; font-size: 14px;">↑ 5% dari bulan lalu</div>
+                    </div>
+                    <div class="report-card balance-report">
+                        <div class="icon">📈</div>
+                        <h3>Saldo Bersih</h3>
+                        <div class="amount">Rp 56 JT</div>
+                        <div style="color: var(--primary); font-size: 14px;">↑ 15% dari bulan lalu</div>
+                    </div>
+                    <div class="report-card">
+                        <div class="icon">👥</div>
+                        <h3>Total Transaksi</h3>
+                        <div class="amount" style="color: var(--warning);">1,248</div>
+                        <div style="color: #6c757d; font-size: 14px;">+42 bulan ini</div>
+                    </div>
+                </div>
+                
+                <!-- Charts -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Statistik Transaksi Bulanan</h3>
+                        <select class="filter-select">
+                            <option>2024</option>
+                            <option>2023</option>
+                            <option>2022</option>
+                        </select>
+                    </div>
+                    <div class="chart-placeholder">
+                        Grafik Transaksi Bulanan - Bisa diintegrasikan dengan Chart.js
+                    </div>
+                </div>
+                
+                <!-- User Performance -->
+                <div class="card">
+                    <h3 style="margin-bottom: 20px;">Performance per User</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Total Pemasukan</th>
+                                <th>Total Pengeluaran</th>
+                                <th>Saldo Bersih</th>
+                                <th>Jumlah Transaksi</th>
+                                <th>Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>codehd!</strong></td>
+                                <td>Rp 12.5 JT</td>
+                                <td>Rp 9.8 JT</td>
+                                <td><strong>Rp 2.7 JT</strong></td>
+                                <td>24</td>
+                                <td style="color: #28a745;">↑ Optimal</td>
+                            </tr>
+                            <tr>
+                                <td><strong>johndoe</strong></td>
+                                <td>Rp 8.3 JT</td>
+                                <td>Rp 7.1 JT</td>
+                                <td><strong>Rp 1.2 JT</strong></td>
+                                <td>18</td>
+                                <td style="color: #ffc107;">→ Stabil</td>
+                            </tr>
+                            <tr>
+                                <td><strong>sarah_connor</strong></td>
+                                <td>Rp 15.2 JT</td>
+                                <td>Rp 12.4 JT</td>
+                                <td><strong>Rp 2.8 JT</strong></td>
+                                <td>31</td>
+                                <td style="color: #28a745;">↑ Optimal</td>
+                            </tr>
+                            <tr>
+                                <td><strong>mike_tyson</strong></td>
+                                <td>Rp 5.1 JT</td>
+                                <td>Rp 6.8 JT</td>
+                                <td><strong style="color: #dc3545;">-Rp 1.7 JT</strong></td>
+                                <td>15</td>
+                                <td style="color: #dc3545;">↓ Perlu Perhatian</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Category Breakdown -->
+                <div class="card">
+                    <h3 style="margin-bottom: 20px;">Breakdown per Kategori</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kategori</th>
+                                <th>Tipe</th>
+                                <th>Total</th>
+                                <th>Persentase</th>
+                                <th>Progress</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Gaji</strong></td>
+                                <td>Pemasukan</td>
+                                <td>Rp 180 JT</td>
+                                <td>73.5%</td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-income" style="width: 73.5%"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Makanan</strong></td>
+                                <td>Pengeluaran</td>
+                                <td>Rp 45 JT</td>
+                                <td>23.8%</td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-expense" style="width: 23.8%"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Tagihan</strong></td>
+                                <td>Pengeluaran</td>
+                                <td>Rp 38 JT</td>
+                                <td>20.1%</td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-expense" style="width: 20.1%"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Investasi</strong></td>
+                                <td>Pemasukan</td>
+                                <td>Rp 32 JT</td>
+                                <td>13.1%</td>
+                                <td>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill progress-income" style="width: 13.1%"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Export functionality
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function() {
+                if (this.textContent.includes('Export')) {
+                    const format = this.textContent.includes('PDF') ? 'PDF' : 'Excel';
+                    alert(`Laporan berhasil diexport dalam format ${format}!`);
+                } else if (this.textContent.includes('Generate')) {
+                    alert('Laporan berhasil digenerate!');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

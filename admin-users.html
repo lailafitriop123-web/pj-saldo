@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen User - Admin Panel</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .logo h2 {
+            font-size: 24px;
+        }
+        
+        .nav-links {
+            list-style: none;
+            padding: 0 15px;
+        }
+        
+        .nav-links li {
+            margin-bottom: 10px;
+        }
+        
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .nav-links i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .top-header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Content Area */
+        .content {
+            padding: 30px;
+            flex: 1;
+        }
+        
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        th, td {
+            padding: 18px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--light);
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-danger {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+        }
+        
+        .badge-warning {
+            background-color: rgba(248, 150, 30, 0.1);
+            color: var(--warning);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+        }
+        
+        .search-filter {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        .filter-select {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            min-width: 150px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .close {
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="admin-dashboard.html"><i>📊</i> Dashboard</a></li>
+                <li><a href="admin-users.html" class="active"><i>👥</i> Manajemen User</a></li>
+                <li><a href="admin-transactions.html"><i>💰</i> Transaksi</a></li>
+                <li><a href="admin-categories.html"><i>📂</i> Kategori</a></li>
+                <li><a href="admin-reports.html"><i>📈</i> Laporan</a></li>
+                <li><a href="admin-settings.html"><i>⚙️</i> Pengaturan</a></li>
+                <li><a href="login.html" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;"><i>🚪</i> Logout</a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="top-header">
+                <h1>Manajemen User</h1>
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <div>
+                        <div>Administrator</div>
+                        <div style="font-size: 12px; opacity: 0.8;">Super Admin</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content Area -->
+            <div class="content">
+                <div class="page-title">
+                    <div>
+                        <h1>Daftar Pengguna</h1>
+                        <p style="color: #6c757d; margin-top: 5px;">Kelola semua user dalam sistem</p>
+                    </div>
+                    <button class="btn btn-primary" id="add-user-btn">+ Tambah User</button>
+                </div>
+                
+                <!-- Search and Filter -->
+                <div class="search-filter">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" placeholder="Cari user...">
+                    </div>
+                    <select class="filter-select">
+                        <option>Semua Role</option>
+                        <option>User</option>
+                        <option>Admin</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>Semua Status</option>
+                        <option>Aktif</option>
+                        <option>Nonaktif</option>
+                    </select>
+                </div>
+                
+                <!-- Users Table -->
+                <div class="card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Nama Lengkap</th>
+                                <th>Role</th>
+                                <th>Saldo</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table">
+                            <!-- Data akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal untuk Tambah/Edit User -->
+    <div class="modal" id="user-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="user-modal-title">Tambah User Baru</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="user-form">
+                <div class="form-group">
+                    <label for="user-username">Username</label>
+                    <input type="text" id="user-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-email">Email</label>
+                    <input type="email" id="user-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="user-password">Password</label>
+                    <input type="password" id="user-password">
+                </div>
+                <div class="form-group">
+                    <label for="user-fullname">Nama Lengkap</label>
+                    <input type="text" id="user-fullname">
+                </div>
+                <div class="form-group">
+                    <label for="user-role">Role</label>
+                    <select id="user-role">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="user-status">Status</label>
+                    <select id="user-status">
+                        <option value="active">Aktif</option>
+                        <option value="inactive">Nonaktif</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 16px;">Simpan User</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const usersTable = document.getElementById('users-table');
+        const userModal = document.getElementById('user-modal');
+        const addUserBtn = document.getElementById('add-user-btn');
+        const userForm = document.getElementById('user-form');
+        const closeButtons = document.querySelectorAll('.close');
+
+        // Display users
+        function displayUsers() {
+            usersTable.innerHTML = '';
+            
+            sampleUsers.forEach(user => {
+                const row = document.createElement('tr');
+                
+                const formattedSaldo = new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
+                }).format(user.saldo);
+                
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td><strong>${user.username}</strong></td>
+                    <td>${user.email}</td>
+                    <td>${user.full_name}</td>
+                    <td>
+                        <span class="badge ${user.role === 'admin' ? 'badge-warning' : 'badge-success'}">
+                            ${user.role}
+                        </span>
+                    </td>
+                    <td>${formattedSaldo}</td>
+                    <td>
+                        <span class="badge ${user.status === 'active' ? 'badge-success' : 'badge-danger'}">
+                            ${user.status === 'active' ? 'Aktif' : 'Nonaktif'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-primary" onclick="editUser(${user.id})">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})">Hapus</button>
+                        </div>
+                    </td>
+                `;
+                
+                usersTable.appendChild(row);
+            });
+        }
+
+        // Modal functionality
+        addUserBtn.addEventListener('click', function() {
+            document.getElementById('user-modal-title').textContent = 'Tambah User Baru';
+            userForm.reset();
+            userModal.style.display = 'flex';
+        });
+
+        closeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                userModal.style.display = 'none';
+            });
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === userModal) {
+                userModal.style.display = 'none';
+            }
+        });
+
+        // Form submission
+        userForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('User berhasil disimpan!');
+            userModal.style.display = 'none';
+        });
+
+        // Edit and delete functions
+        function editUser(userId) {
+            const user = sampleUsers.find(u => u.id === userId);
+            if (user) {
+                document.getElementById('user-modal-title').textContent = 'Edit User';
+                document.getElementById('user-username').value = user.username;
+                document.getElementById('user-email').value = user.email;
+                document.getElementById('user-fullname').value = user.full_name;
+                document.getElementById('user-role').value = user.role;
+                document.getElementById('user-status').value = user.status;
+                userModal.style.display = 'flex';
+            }
+        }
+
+        function deleteUser(userId) {
+            if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+                alert(`User dengan ID ${userId} akan dihapus`);
+                // Dalam aplikasi nyata, akan ada request DELETE ke server
+            }
+        }
+
+        // Initialize
+        displayUsers();
+    </script>
+</body>
+</html>

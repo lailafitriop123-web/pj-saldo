@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Financial Management</title>
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --danger: #f72585;
+            --warning: #f8961e;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+        }
+        
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            text-align: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .logo h2 {
+            font-size: 24px;
+        }
+        
+        .nav-links {
+            list-style: none;
+            padding: 0 15px;
+        }
+        
+        .nav-links li {
+            margin-bottom: 10px;
+        }
+        
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        .nav-links i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .top-header {
+            background: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* Content Area */
+        .content {
+            padding: 30px;
+            flex: 1;
+        }
+        
+        .page-title {
+            margin-bottom: 30px;
+        }
+        
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .card h3 {
+            margin-bottom: 15px;
+            font-size: 16px;
+            opacity: 0.8;
+            font-weight: 600;
+        }
+        
+        .card .amount {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stats-card .amount {
+            color: var(--primary);
+        }
+        
+        .users-card .amount {
+            color: var(--success);
+        }
+        
+        .income-card .amount {
+            color: var(--success);
+        }
+        
+        .expense-card .amount {
+            color: var(--danger);
+        }
+        
+        .card-icon {
+            font-size: 48px;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+        
+        .card-trend {
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .trend-up {
+            color: #28a745;
+        }
+        
+        .trend-down {
+            color: #dc3545;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .chart-placeholder {
+            height: 300px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            color: #6c757d;
+            font-size: 18px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        th, td {
+            padding: 18px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: var(--light);
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--success);
+        }
+        
+        .badge-danger {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--danger);
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .action-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+        }
+        
+        .action-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+        
+        .action-card h3 {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .action-card p {
+            color: #6c757d;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <h2>Admin Panel</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="admin-dashboard.html" class="active"><i>📊</i> Dashboard</a></li>
+                <li><a href="admin-users.html"><i>👥</i> Manajemen User</a></li>
+                <li><a href="admin-transactions.html"><i>💰</i> Transaksi</a></li>
+                <li><a href="admin-categories.html"><i>📂</i> Kategori</a></li>
+                <li><a href="admin-reports.html"><i>📈</i> Laporan</a></li>
+                <li><a href="admin-settings.html"><i>⚙️</i> Pengaturan</a></li>
+                <li><a href="login.html" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;"><i>🚪</i> Logout</a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="top-header">
+                <h1>Dashboard Admin</h1>
+                <div class="user-info">
+                    <div class="user-avatar">A</div>
+                    <div>
+                        <div>Administrator</div>
+                        <div style="font-size: 12px; opacity: 0.8;">Super Admin</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Content Area -->
+            <div class="content">
+                <div class="page-title">
+                    <h1>Overview Sistem</h1>
+                    <p style="color: #6c757d; margin-top: 5px;">Statistik dan ringkasan sistem keuangan</p>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <div class="action-card" onclick="location.href='admin-users.html'">
+                        <div class="action-icon">👥</div>
+                        <h3>Kelola User</h3>
+                        <p>Manajemen user dan permissions</p>
+                    </div>
+                    <div class="action-card" onclick="location.href='admin-transactions.html'">
+                        <div class="action-icon">💰</div>
+                        <h3>Lihat Transaksi</h3>
+                        <p>Monitor semua transaksi sistem</p>
+                    </div>
+                    <div class="action-card" onclick="location.href='admin-reports.html'">
+                        <div class="action-icon">📈</div>
+                        <h3>Generate Laporan</h3>
+                        <p>Buat laporan keuangan</p>
+                    </div>
+                    <div class="action-card" onclick="location.href='admin-settings.html'">
+                        <div class="action-icon">⚙️</div>
+                        <h3>Pengaturan</h3>
+                        <p>Konfigurasi sistem</p>
+                    </div>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="card-grid">
+                    <div class="card stats-card">
+                        <div class="card-icon">👥</div>
+                        <h3>Total Users</h3>
+                        <div class="amount">1,248</div>
+                        <div class="card-trend trend-up">↑ 12% dari bulan lalu</div>
+                    </div>
+                    <div class="card income-card">
+                        <div class="card-icon">💰</div>
+                        <h3>Total Pemasukan</h3>
+                        <div class="amount">Rp 245 Jt</div>
+                        <div class="card-trend trend-up">↑ 8% dari bulan lalu</div>
+                    </div>
+                    <div class="card expense-card">
+                        <div class="card-icon">💸</div>
+                        <h3>Total Pengeluaran</h3>
+                        <div class="amount">Rp 189 Jt</div>
+                        <div class="card-trend trend-down">↑ 5% dari bulan lalu</div>
+                    </div>
+                    <div class="card users-card">
+                        <div class="card-icon">📈</div>
+                        <h3>Saldo Bersih</h3>
+                        <div class="amount">Rp 56 Jt</div>
+                        <div class="card-trend trend-up">↑ 15% dari bulan lalu</div>
+                    </div>
+                </div>
+                
+                <!-- Charts Section -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>Statistik Transaksi Bulan Ini</h3>
+                        <select style="padding: 8px 15px; border-radius: 5px; border: 1px solid #ddd;">
+                            <option>Bulan Ini</option>
+                            <option>Bulan Lalu</option>
+                            <option>3 Bulan Terakhir</option>
+                        </select>
+                    </div>
+                    <div class="chart-placeholder">
+                        Grafik Transaksi - Bisa diintegrasikan dengan Chart.js
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="chart-container">
+                    <h3 style="margin-bottom: 20px;">Aktivitas Terbaru</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Aktivitas</th>
+                                <th>Waktu</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>codehd!</strong></td>
+                                <td>Menambah transaksi pemasukan</td>
+                                <td>5 menit lalu</td>
+                                <td><span class="badge badge-success">Berhasil</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>johndoe</strong></td>
+                                <td>Menghapus transaksi pengeluaran</td>
+                                <td>12 menit lalu</td>
+                                <td><span class="badge badge-success">Berhasil</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>sarah_connor</strong></td>
+                                <td>Registrasi user baru</td>
+                                <td>1 jam lalu</td>
+                                <td><span class="badge badge-success">Berhasil</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>mike_tyson</strong></td>
+                                <td>Gagal login</td>
+                                <td>2 jam lalu</td>
+                                <td><span class="badge badge-danger">Gagal</span></td>
+                            </tr>
+                            <tr>
+                                <td><strong>admin</strong></td>
+                                <td>Update kategori transaksi</td>
+                                <td>3 jam lalu</td>
+                                <td><span class="badge badge-success">Berhasil</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update current date
+        const currentDate = new Date();
+        document.getElementById('current-date').textContent = currentDate.toLocaleDateString('id-ID', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+    </script>
+</body>
+</html>
